@@ -9,11 +9,11 @@ implement multi-mode counter and verify the implementation
 - You have a multi-mode counter. It can count up, down, by ones and by twos. There is
 a two-bit control bus input indicating which one of the four modes is active.
 
-- Control Value Function
-00 Count up by 1’s
-01 Count up by 2’s
-10 Count down by 1’s
-11 Count down by 2’s
+- Control Value         Function
+    00                 Count up by 1’s.
+    01                 Count up by 2’s.
+    10                 Count down by 1’s.
+    11                 Count down by 2’s.
 
 - You also have an initial value input and a control signal called INIT. When INIT is 1,
 the initial value is parallelly loaded into the counter.
