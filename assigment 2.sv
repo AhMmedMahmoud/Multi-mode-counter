@@ -97,9 +97,7 @@ module multi_mode_counter(mode,init,initialValue,clk,rst,who,winner,loser,count,
 						       1'b1 :	  next_state <= LOADING;	
 						       default: next_state <= COUNTING;
 			endcase	   	
-	end
-	
-	
+	end	
 endmodule
 
 
@@ -109,24 +107,20 @@ module multi_mode_counter_tb;
   
   // set size of multicounter
   parameter MULTICOUNTER_SIZE = 5;
-  
   // switches
   reg clk;
   reg rst;
   reg [1:0] mode;
   reg init;
   reg [MULTICOUNTER_SIZE-1:0] init_val;
-
   // to see their values with switches
   wire winner;
   wire loser;
   wire [1:0] who;
   wire gameover;
   wire [MULTICOUNTER_SIZE-1:0]count;
-  
   // set time of clock cycle
   parameter CYCLE = 4;
-  
   // Instantiate the DUT  
   multi_mode_counter dut (mode,init,init_val,clk,rst,who,winner,loser,count,gameover);
  
@@ -159,5 +153,4 @@ module multi_mode_counter_tb;
     init = 0;
     #200;
   end
-
 endmodule
