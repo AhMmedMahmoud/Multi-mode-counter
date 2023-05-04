@@ -1,5 +1,5 @@
 # multi-mode-counter
-This project is for Digital Verification Course. it was written in system verilog using Modelsim simulator.
+This project is for Digital Verification Course. it was written in system verilog using EDA Playground.
 ## Aim
 implement multi-mode counter and verify the implementation
 ## Procedure Details
@@ -41,7 +41,7 @@ diagrams.
 **3- Synchronous load**
 
 **4- Asynchronous rst but count is updated at posedge of clock only**
-- if (rst = 1)                                              then  (counter = 0 , winner_counter = 0 , loser_counter = 0)
+-        if (rst = 1)                                               then  (counter = 0 , winner_counter = 0 , loser_counter = 0)
 -	 if (transaction from 1 to 0  and  mode = COUNT_UP_BY_1)    then  (counter = 0)
 -	 if (transaction from 1 to 0  and  mode = COUNT_UP_BY_2)    then  (counter = 0)
 -	 if (transaction from 1 to 0  and  mode = COUNT_DOWN_BY_1)  then  (counter = max value)
@@ -51,10 +51,10 @@ diagrams.
 
 **6- Loser signal is kept low when ever counter value is 0**
 
-**7- GAMEOVER is kept high for one clock cycle then all counters are clear**
+**7- GAMEOVER is kept high for one clock cycle then winner and losser counters are cleared**
  -      winner_count <= 0;
--	     loser_count <= 0;
--	     if (mode = COUNT_UP_BY_1)    then  (counter = 0)
--	     if (mode = COUNT_UP_BY_2)    then  (counter = 0)
--	     if (mode = COUNT_DOWN_BY_1)  then  (counter = max value)
--	     if (mode = COUNT_DOWN_BY_2)  then  (counter = max value
+-	loser_count <= 0;
+-	if (mode = COUNT_UP_BY_1)    then  (counter = 0)
+-       if (mode = COUNT_UP_BY_2)    then  (counter = 0)
+-       if (mode = COUNT_DOWN_BY_1)  then  (counter = max value)
+-       if (mode = COUNT_DOWN_BY_2)  then  (counter = max value
