@@ -15,13 +15,13 @@ module multi_mode_counter(mode,init,initialValue,clk,rst,who,winner,loser,count,
 	parameter [1:0]COUNT_DOWN_BY_2 = 2'b11;
 	// States
 	parameter IDLE   = 1'b0;
-       parameter RUNNING = 1'b1;
+        parameter RUNNING = 1'b1;
 	// Inputs
 	input wire [1:0]mode;
 	input wire init, clk, rst;
 	input wire [MULTICOUNTER_SIZE-1:0]initialValue;
 	// Outputs
-       output reg [MULTICOUNTER_SIZE-1:0]count;  // update at posedge of clock only
+        output reg [MULTICOUNTER_SIZE-1:0]count;  // update at posedge of clock only
 	output wire [1:0]who;
 	output wire winner,loser;
 	output reg GAMEOVER;
@@ -33,8 +33,8 @@ module multi_mode_counter(mode,init,initialValue,clk,rst,who,winner,loser,count,
 	reg [3:0]loser_count;
         reg raised;
 	// continous assignment
-       assign loser = (count == 0);
-       assign winner = (count == MULTICOUNTER_MAX_VALUE);
+        assign loser = (count == 0);
+        assign winner = (count == MULTICOUNTER_MAX_VALUE);
 	assign who = (!GAMEOVER)?0:((winner_count==COUNTERS_MAX_VALUE)?2'b10:2'b01);
 	
   
