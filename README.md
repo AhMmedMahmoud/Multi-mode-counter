@@ -2,8 +2,6 @@
 This project is for Digital Verification Course. it was written in system verilog using Modelsim simulator.
 ## Aim
 implement multi-mode counter and verify the implementation
-## FSM
-![FSM of multimode counter](https://user-images.githubusercontent.com/104006521/231020488-68736ced-9ef3-4e0d-a38c-49cd502e8fb9.png)
 ## Procedure Details
 - Given the following specifications, write a SV code to describe the system.
 - You have a multi-mode counter. It can count up, down, by ones and by twos. There is
