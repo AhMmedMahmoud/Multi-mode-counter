@@ -42,10 +42,10 @@ diagrams.
 
 **4- Asynchronous rst but count is updated at posedge of clock only**
 - if (rst = 1)                                              then  (counter = 0 , winner_counter = 0 , loser_counter = 0)
--	 if (transaction from 1 to 0  &&  mode = COUNT_UP_BY_1)    then  (counter = 0)
--	 if (transaction from 1 to 0  &&  mode = COUNT_UP_BY_2)    then  (counter = 0)
--	 if (transaction from 1 to 0  &&  mode = COUNT_DOWN_BY_1)  then  (counter = max value)
--	 if (transaction from 1 to 0  &&  mode = COUNT_DOWN_BY_2)  then  (counter = max value)
+-	 if (transaction from 1 to 0  and  mode = COUNT_UP_BY_1)    then  (counter = 0)
+-	 if (transaction from 1 to 0  and  mode = COUNT_UP_BY_2)    then  (counter = 0)
+-	 if (transaction from 1 to 0  and  mode = COUNT_DOWN_BY_1)  then  (counter = max value)
+-	 if (transaction from 1 to 0  and  mode = COUNT_DOWN_BY_2)  then  (counter = max value)
 
 **5- Winner signal is kept high when ever counter value is maximum**
 
