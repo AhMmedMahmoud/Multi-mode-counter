@@ -1,7 +1,7 @@
-/* code of multi_mode_counter */ 
+/* Design */ 
 module multi_mode_counter(mode,init,initialValue,clk,rst,who,winner,loser,count,GAMEOVER);
 
-	/***********************************defination part*******************************/
+	//--------------defination part--------------
 	// multi mode counter parameters 
 	parameter MULTICOUNTER_SIZE = 5;
 	parameter MULTICOUNTER_MAX_VALUE = $pow(2, MULTICOUNTER_SIZE)-1;
@@ -14,143 +14,167 @@ module multi_mode_counter(mode,init,initialValue,clk,rst,who,winner,loser,count,
 	parameter [1:0]COUNT_DOWN_BY_1 = 2'b10;
 	parameter [1:0]COUNT_DOWN_BY_2 = 2'b11;
 	// States
-	parameter [1:0]IDLE     = 2'b00;
-	parameter [1:0]COUNTING = 2'b01;
-	parameter [1:0]LOADING  = 2'b10;
+	parameter IDLE   = 1'b0;
+    parameter RUNNING = 1'b1;
 	// Inputs
 	input wire [1:0]mode;
-	input wire init;
+	input wire init, clk, rst;
 	input wire [MULTICOUNTER_SIZE-1:0]initialValue;
-	input wire clk;
-	input wire rst;
 	// Outputs
-	output reg [MULTICOUNTER_SIZE-1:0]count;
+    output reg [MULTICOUNTER_SIZE-1:0]count;  // update at posedge of clock only
 	output wire [1:0]who;
-	output wire winner;
-	output wire loser;
-	output wire GAMEOVER;
-	
-	
-	/************************************physical part*****************************************/
+	output wire winner,loser;
+	output reg GAMEOVER;
+  
+	//--------------physical part--------------
 	// storing elements
-	reg [1:0]state;
-	reg [1:0]next_state;
+	reg state;
 	reg [3:0]winner_count;
 	reg [3:0]loser_count;
+    reg raised;
 	// continous assignment
-	assign loser = (count == 0);
-	assign winner = (count == MULTICOUNTER_MAX_VALUE);
-	assign GAMEOVER = ((winner_count==COUNTERS_MAX_VALUE)||(loser_count==COUNTERS_MAX_VALUE));
+    assign loser = (count == 0);
+    assign winner = (count == MULTICOUNTER_MAX_VALUE);
 	assign who = (!GAMEOVER)?0:((winner_count==COUNTERS_MAX_VALUE)?2'b10:2'b01);
 	
-	
-	/**************************************trigger part*****************************************/
-	// State register and output logic
-	always @(posedge clk or posedge rst) begin
-	  if (rst == 1) begin
-		  state <= IDLE;		
-		  winner_count <= 0;
-		  loser_count <= 0;
-		  count <= 0;
-		end
-		else begin
-		  state <= next_state;	
-		  case(next_state)  IDLE:	   count <= 'bx;
-			                  LOADING: count <= initialValue;     
-			                  COUNTING:  begin   
-			                     case(mode)
-					                   COUNT_UP_BY_1:	   count <= count + 1;               
-		                  	      COUNT_UP_BY_2:    count <= count + 2; 
-				                     COUNT_DOWN_BY_1:  count <= count - 1;
-	                           COUNT_DOWN_BY_2:  count <= count - 2;
-                           endcase
-       
-                           if(count == 0) begin
-                              if(loser_count==COUNTERS_MAX_VALUE) begin
-	       	                       winner_count <= 0;
-	       	                       loser_count <= 0;
-	       	                    end
-	       	                    else
-	       	                       loser_count <= loser_count + 1;
-	       	                 end  
-	                         else if(count == MULTICOUNTER_MAX_VALUE)  begin
-	                             if(winner_count==COUNTERS_MAX_VALUE) begin
-	       	                        winner_count <= 0;
-	       	                        loser_count <= 0;
-	       	                   	 end
-	       	                     else
-                                  winner_count <= winner_count + 1;
-                           end             
-	       	                 else if((winner_count==COUNTERS_MAX_VALUE)||(loser_count==COUNTERS_MAX_VALUE)) begin
-	       	               	    winner_count <= 0;
-	       	                    loser_count <= 0;
-	       	                 end	               
-					             end    
-		   endcase	 
-	  end
-	end
-	
-	
-	// Next state logic
-	always @(rst,state,init,mode) begin
-			case(init)			1'b0 :	  next_state <= COUNTING;		
-						       1'b1 :	  next_state <= LOADING;	
-						       default: next_state <= COUNTING;
-			endcase	   	
-	end	
+  
+	//--------------trigger part--------------
+    // reset trigger
+    always @(negedge rst) begin
+      state <= IDLE;
+    end
+	// count logic
+    always @(posedge clk) begin
+      if (!rst) begin
+          if(state == IDLE) begin
+              	   winner_count <= 0;
+	               loser_count <= 0;
+                   GAMEOVER <= 0;
+	               count <= 0;
+                   state <= RUNNING;
+          end
+          else if(init == 1)
+				   count <= initialValue;
+          else if(raised == 1) begin
+                   count <= 0;
+                   raised <= 0;
+          end
+          else begin
+                   case(mode)
+			       COUNT_UP_BY_1:	 count <= count + 1;        
+	    	       COUNT_UP_BY_2:    count <= count + 2; 
+		           COUNT_DOWN_BY_1:  count <= count - 1;
+	               COUNT_DOWN_BY_2:  count <= count - 2;
+                   endcase 
+          end
+      end
+   end	  
+   // increase winner counter
+   always @(posedge winner) begin
+     if(!rst && GAMEOVER == 0)
+   	   winner_count <= winner_count + 1;
+   end 
+   // increase loser counter
+   always @(posedge loser , negedge raised) begin
+     if(!rst  && GAMEOVER == 0)
+   	   loser_count <= loser_count + 1;
+   end  
+   // raise GAMEOVRE for one clock then down it with all counters cleared
+   always @(loser_count or winner_count) begin
+      if(loser_count == COUNTERS_MAX_VALUE || winner_count == COUNTERS_MAX_VALUE)
+      begin
+          GAMEOVER <= 1;
+          raised <= 1;
+          @(posedge clk);
+	      winner_count <= 0;
+	      loser_count <= 0;
+          GAMEOVER <= 0;
+      end  
+   end 
+  
 endmodule
 
 
 
-/* test bench of multiCounter */
+
+/* test bench */
 module multi_mode_counter_tb;
-  
-  // set size of multicounter
-  parameter MULTICOUNTER_SIZE = 5;
+
   // switches
   reg clk;
   reg rst;
   reg [1:0] mode;
   reg init;
-  reg [MULTICOUNTER_SIZE-1:0] init_val;
+  reg [4:0] init_val;
   // to see their values with switches
   wire winner;
   wire loser;
   wire [1:0] who;
   wire gameover;
-  wire [MULTICOUNTER_SIZE-1:0]count;
-  // set time of clock cycle
+  wire [4:0] count;
+  // clock cycle duration
   parameter CYCLE = 4;
+  
   // Instantiate the DUT  
-  multi_mode_counter dut (mode,init,init_val,clk,rst,who,winner,loser,count,gameover);
- 
+  multi_mode_counter dut  (mode,init,init_val,clk,rst,who,winner,loser,count,gameover);
+  
   // Clock generation
   initial  begin
-   clk <= 0;
    forever #(CYCLE/2) clk <= ~clk;
   end
-
+  
+  // initialization
+  initial begin
+     clk = 0;
+     init = 1'b0;
+     rst = 1'b1;
+     init_val = 5'b11111;
+  end
+  
   // Reset generation
   initial begin
-    rst <= 1'b0;
-    #10 
-    rst <= 1'b1;
-    #10;
+    #10; 
     rst <= 1'b0;
   end
-
-  // Test all possible combinations of control and initialization values
+ 
+  // Test all combinations of control and initialization values
   initial begin
-    for (int i = 0; i < 2; i++) begin
-      for (int j = 0; j < 4; j++) begin
-        mode = j;
-        #200;
-      end
+    mode <= 2'b00;
+    #1840;
+    init <= 1'b1;
+    #10;
+    init_val <= 5'b01010;
+    #10;
+    init_val <= 5'b11111;
+    #10;
+    init_val <= 5'b01010;
+    #10;
+    init <= 1'b0;
+    #1000;
+    mode <= 2'b10;
+    #1000;
+    mode <= 2'b01;
+    #1000;
+    mode <= 2'b11;
+    #1000;
+    mode <= 2'b00;
+    #100;
+    for(int i = 0 ; i < 32 ; i++)
+    begin
+      init = 1'b1;
+      #9;
+      init_val = i;
+      #8;
+      init = 1'b0;
+      #8;
     end
-    init_val = 5'b10010;
-    init = 1;
-    #12;
-    init = 0;
     #200;
   end
+  
+  initial begin
+    $dumpfile("counter.vcd");
+    $dumpvars;
+    #5920 $finish;
+  end
+  
 endmodule
