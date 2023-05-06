@@ -1,23 +1,27 @@
 /* test bench */
 module multi_mode_counter_tb;
 
+  // clock cycle duration
+  parameter CYCLE = 4;
+  // Counters sizes
+  parameter MULTI_MODE_COUNTER_WIDTH = 5;
+  parameter COUNTERS_WIDTH = 4;
   // switches
   reg clk;
   reg rst;
   reg [1:0] mode;
   reg init;
-  reg [4:0] init_val;
+  reg [MULTI_MODE_COUNTER_WIDTH-1:0] init_val;
   // to see their values with switches
   wire winner;
   wire loser;
   wire [1:0] who;
   wire gameover;
-  wire [4:0] count;
-  // clock cycle duration
-  parameter CYCLE = 4;
+  wire [MULTI_MODE_COUNTER_WIDTH-1:0] count;
+
   
   // Instantiate the DUT  
-  multi_mode_counter dut  (mode,init,init_val,clk,rst,who,winner,loser,count,gameover);
+  multi_mode_counter #(MULTI_MODE_COUNTER_WIDTH,COUNTERS_WIDTH) dut  (mode,init,init_val,clk,rst,who,winner,loser,count,gameover);
   
   // Clock generation
   initial  begin
