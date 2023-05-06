@@ -31,30 +31,33 @@ modules used.
 - Develop a simple test bench that generates the required inputs to test the different
 scenarios, and make sure the design is correct by investigating the generated wave
 diagrams.
-# **assumptions**
-**1- Counter bit is determined according to** 
-- parameter MULTICOUNTER_SIZE = 5;
-			 
-**2- Clock duration is determined according to**
-- parameter CYCLE = 4;
-			 
-**3- Synchronous load**
 
-**4- Asynchronous rst but count is updated at posedge of clock only**
--        if (rst = 1)         then  (counter = 0 , winner_counter = 0 , loser_counter = 0)
--	 if (transaction from 1 to 0  and  mode = COUNT_UP_BY_1)    then  (counter = 0)
--	 if (transaction from 1 to 0  and  mode = COUNT_UP_BY_2)    then  (counter = 0)
--	 if (transaction from 1 to 0  and  mode = COUNT_DOWN_BY_1)  then  (counter = max value)
--	 if (transaction from 1 to 0  and  mode = COUNT_DOWN_BY_2)  then  (counter = max value)
+# assumptions
 
-**5- Winner signal is kept high when ever counter value is maximum**
+a) At COUNT_UP_BY_1 mode the counter will count as 
+0, 1, 2, 3, 4, ....... 31, 0, 1, 2, 3, ...... and so on
+          
+b) At COUNT_UP_BY_2 mode the counter will count as 
+0, 2, 4, 6, 8, ....... 30, 0, 2, 4, 6, ......... and so on   (no odd numbers)
+note: even if i try to load odd number, counter wonot have odd numbers
 
-**6- Loser signal is kept low when ever counter value is 0**
+c) At COUNT_DOWN_BY_1 mode the counter will count as 
+31, 30, 29, 28, 27, 26, ....... 0, 31, 30, 29, 28, ......... and so on
 
-**7- GAMEOVER is kept high for one clock cycle then winner and losser counters are cleared**
--      winner_count <= 0;
--      loser_count <= 0;
--      if (mode = COUNT_UP_BY_1)    then  (counter = 0)
--      if (mode = COUNT_UP_BY_2)    then  (counter = 0)
--      if (mode = COUNT_DOWN_BY_1)  then  (counter = max value)
--      if (mode = COUNT_DOWN_BY_2)  then  (counter = max value
+d) At COUNT_DOWN_BY_2 mode the counter will count as 
+31, 29, 27, 25, 23, ..... 1, 31,31, 29, 27, 25, ......... and so on  (no even numbers)
+note: even if i try to load even number, counter wonot have even numbers
+
+e)    if you load an odd value when it's in up by 2 
+      the counter will continue to count up by 1 until the next even number is reached, 
+      then switch to counting up by 2.
+          
+      For example, if you load the odd value 7 into the counter when it's in up by 2 mode,
+      the counter will first count up to 8 (by 1), then switch to up by 2 mode and count up to 10      
+        
+f)    if you load an even value when it's in down by 2 
+      the counter will continue to count down by 1 until the previous odd number is reached, 
+      then switch to counting down by 2.
+          
+      For example, if you load the odd value 8 into the counter when it's in down by 2 mode,
+      the counter will first count up to 7 (by 1), then switch to down by 2 mode and count up to 5
