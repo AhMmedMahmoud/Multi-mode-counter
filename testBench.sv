@@ -29,8 +29,7 @@ module multi_mode_counter_tb;
   end
 
   // generate stimuls
-  initial begin
-    
+  initial begin    
     clk <= 0;
     init <= 1'b0;
     rst <= 1'b0;
