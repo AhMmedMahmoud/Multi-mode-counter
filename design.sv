@@ -73,9 +73,9 @@ module multi_mode_counter(mode,init,initialValue,clk,rst,who,winner,loser,count,
           else if(raised == 1) begin
                    case(mode)
 			       COUNT_UP_BY_1:	 count <= 0;        
-	    	       COUNT_UP_BY_2:    count <= 0; 
-		           COUNT_DOWN_BY_1:  count <= MULTICOUNTER_MAX_VALUE;
-	               COUNT_DOWN_BY_2:  count <= MULTICOUNTER_MAX_VALUE;
+	    	               COUNT_UP_BY_2:    count <= 0; 
+		               COUNT_DOWN_BY_1:  count <= MULTICOUNTER_MAX_VALUE;
+	                       COUNT_DOWN_BY_2:  count <= MULTICOUNTER_MAX_VALUE;
                    endcase
                    raised <= 0;
           end
