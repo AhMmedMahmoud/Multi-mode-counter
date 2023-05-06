@@ -35,7 +35,7 @@ module multi_mode_counter  #(parameter MULTI_MODE_COUNTER_WIDTH, parameter COUNT
       if(rst) begin
          GAMEOVER <= 0;
          winner_count <= 0;
-	     loser_count <= 0;
+	 loser_count <= 0;
          case(mode)
 		   COUNT_UP_BY_1:    count <= 0;
 	           COUNT_UP_BY_2:    count <= 0;
