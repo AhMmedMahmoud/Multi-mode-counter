@@ -37,9 +37,9 @@ module multi_mode_counter  #(parameter MULTI_MODE_COUNTER_WIDTH, parameter COUNT
          winner_count <= 0;
 	     loser_count <= 0;
          case(mode)
-		       COUNT_UP_BY_1:	 count <= 0;
+		   COUNT_UP_BY_1:    count <= 0;
 	           COUNT_UP_BY_2:    count <= 0;
-		       COUNT_DOWN_BY_1:  count <= MULTICOUNTER_MAX_VALUE;
+	           COUNT_DOWN_BY_1:  count <= MULTICOUNTER_MAX_VALUE;
 	           COUNT_DOWN_BY_2:  count <= MULTICOUNTER_MAX_VALUE;
          endcase
       end
@@ -51,25 +51,25 @@ module multi_mode_counter  #(parameter MULTI_MODE_COUNTER_WIDTH, parameter COUNT
           if(init == 1) begin
                    case(mode)
 			       COUNT_UP_BY_1:	 count <= initialValue;     
-                   COUNT_UP_BY_2:    begin if(initialValue % 2 == 0)
-                                        count <= initialValue;
-                                     else
-                                       count <= initialValue + 1;
-                                     end 
-		           COUNT_DOWN_BY_1:  count <= initialValue;
-                   COUNT_DOWN_BY_2:  begin if ( (MULTICOUNTER_MAX_VALUE % 2) == (initialValue %2))
-                                        count <= initialValue;
-                                     else
-                                        count <= initialValue - 1;
-                                     end 
+                               COUNT_UP_BY_2:    begin if(initialValue % 2 == 0)
+                                                   count <= initialValue;
+                                                 else
+                                                   count <= initialValue + 1;
+                                                 end 
+		               COUNT_DOWN_BY_1:  count <= initialValue;
+                               COUNT_DOWN_BY_2:  begin if ( (MULTICOUNTER_MAX_VALUE % 2) == (initialValue %2))
+                                                   count <= initialValue;
+                                                 else
+                                                   count <= initialValue - 1;
+                                                 end 
                    endcase
           end
           else if(raised == 1) begin
                    case(mode)
 			       COUNT_UP_BY_1:	 count <= 0;        
-	    	       COUNT_UP_BY_2:    count <= 0; 
-		           COUNT_DOWN_BY_1:  count <= MULTICOUNTER_MAX_VALUE;
-	               COUNT_DOWN_BY_2:  count <= MULTICOUNTER_MAX_VALUE;
+	    	               COUNT_UP_BY_2:    count <= 0; 
+		               COUNT_DOWN_BY_1:  count <= MULTICOUNTER_MAX_VALUE;
+	                       COUNT_DOWN_BY_2:  count <= MULTICOUNTER_MAX_VALUE;
                    endcase
                    raised <= 0;
           end
