@@ -82,17 +82,17 @@ module multi_mode_counter(mode,init,initialValue,clk,rst,who,winner,loser,count,
           else begin        
                    case(mode)
 			       COUNT_UP_BY_1:	 count <= count + 1;   
-                   COUNT_UP_BY_2:    begin if(count % 2 == 0)
-                                        count <= count + 2; 
-                                     else
-                                       count <= count + 1;
-                                     end 
-		           COUNT_DOWN_BY_1:  count <= count - 1;
-                   COUNT_DOWN_BY_2:  begin if ( (31 % 2) == (count %2))
-                                        count <= count - 2;
-                                     else
-                                        count <= count - 1;
-                                     end 
+                               COUNT_UP_BY_2:    begin if(count % 2 == 0)
+                                                   count <= count + 2; 
+                                                 else
+                                                   count <= count + 1;
+                                                 end 
+		               COUNT_DOWN_BY_1:  count <= count - 1;
+                               COUNT_DOWN_BY_2:  begin if ( (31 % 2) == (count %2))
+                                                   count <= count - 2;
+                                                 else
+                                                   count <= count - 1;
+                                                 end 
                    endcase
           end
       end
