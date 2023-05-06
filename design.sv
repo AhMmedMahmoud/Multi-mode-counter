@@ -43,8 +43,7 @@ module multi_mode_counter  #(parameter MULTI_MODE_COUNTER_WIDTH, parameter COUNT
 	           COUNT_DOWN_BY_2:  count <= MULTICOUNTER_MAX_VALUE;
          endcase
       end
-    end
-  
+    end  
     // count logic
     always @(posedge clk) begin
       if(!rst) begin
