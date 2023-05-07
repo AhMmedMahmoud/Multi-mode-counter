@@ -61,3 +61,5 @@ f)    if you load an even value when it's in down by 2
           
       For example, if you load the odd value 8 into the counter when it's in down by 2 mode,
       the counter will first count up to 7 (by 1), then switch to down by 2 mode and count up to 5
+      
+g)    same idea when we are switching between modes
