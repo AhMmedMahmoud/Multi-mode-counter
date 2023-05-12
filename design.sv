@@ -49,18 +49,18 @@ module multi_mode_counter  #(parameter MULTI_MODE_COUNTER_WIDTH, parameter COUNT
       if(!rst) begin
           if(init == 1) begin
                    case(mode)
-			       COUNT_UP_BY_1:	 count <= initialValue;     
-                   COUNT_UP_BY_2:    begin if(initialValue % 2 == 0)
-                                        count <= initialValue;
-                                     else
-                                       count <= initialValue + 1;
-                                     end 
-		           COUNT_DOWN_BY_1:  count <= initialValue;
-                   COUNT_DOWN_BY_2:  begin if ( (MULTICOUNTER_MAX_VALUE % 2) == (initialValue %2))
-                                        count <= initialValue;
-                                     else
-                                        count <= initialValue - 1;
-                                     end 
+		       COUNT_UP_BY_1:	 count <= initialValue;     
+                       COUNT_UP_BY_2:    begin if(initialValue % 2 == 0)
+                                           count <= initialValue;
+                                         else
+                                           count <= initialValue + 1;
+                                         end 
+		       COUNT_DOWN_BY_1:  count <= initialValue;
+                       COUNT_DOWN_BY_2:  begin if ( (MULTICOUNTER_MAX_VALUE % 2) == (initialValue %2))
+                                           count <= initialValue;
+                                         else
+                                           count <= initialValue - 1;
+                                         end 
                    endcase
           end
           else if(GAMEOVER == 1) begin
