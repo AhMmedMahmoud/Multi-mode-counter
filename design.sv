@@ -14,7 +14,6 @@ module multi_mode_counter  #(parameter MULTI_MODE_COUNTER_WIDTH, parameter COUNT
     // storing elements
     reg [COUNTERS_WIDTH-1:0]winner_count;
     reg [COUNTERS_WIDTH-1:0]loser_count;
-    reg raised;
     // Counters maximum values
     integer MULTICOUNTER_MAX_VALUE = $pow(2, MULTI_MODE_COUNTER_WIDTH)-1;
     integer COUNTERS_MAX_VALUE = $pow(2, COUNTERS_WIDTH)-1;
@@ -35,57 +34,57 @@ module multi_mode_counter  #(parameter MULTI_MODE_COUNTER_WIDTH, parameter COUNT
       if(rst) begin
          GAMEOVER <= 0;
          winner_count <= 0;
-	 loser_count <= 0;
+	     loser_count <= 0;
          case(mode)
-		   COUNT_UP_BY_1:    count <= 0;
+		       COUNT_UP_BY_1:	 count <= 0;
 	           COUNT_UP_BY_2:    count <= 0;
-	           COUNT_DOWN_BY_1:  count <= MULTICOUNTER_MAX_VALUE;
+		       COUNT_DOWN_BY_1:  count <= MULTICOUNTER_MAX_VALUE;
 	           COUNT_DOWN_BY_2:  count <= MULTICOUNTER_MAX_VALUE;
          endcase
       end
-    end  
+    end
+  
     // count logic
     always @(posedge clk) begin
       if(!rst) begin
           if(init == 1) begin
                    case(mode)
 			       COUNT_UP_BY_1:	 count <= initialValue;     
-                               COUNT_UP_BY_2:    begin if(initialValue % 2 == 0)
-                                                   count <= initialValue;
-                                                 else
-                                                   count <= initialValue + 1;
-                                                 end 
-		               COUNT_DOWN_BY_1:  count <= initialValue;
-                               COUNT_DOWN_BY_2:  begin if ( (MULTICOUNTER_MAX_VALUE % 2) == (initialValue %2))
-                                                   count <= initialValue;
-                                                 else
-                                                   count <= initialValue - 1;
-                                                 end 
+                   COUNT_UP_BY_2:    begin if(initialValue % 2 == 0)
+                                        count <= initialValue;
+                                     else
+                                       count <= initialValue + 1;
+                                     end 
+		           COUNT_DOWN_BY_1:  count <= initialValue;
+                   COUNT_DOWN_BY_2:  begin if ( (MULTICOUNTER_MAX_VALUE % 2) == (initialValue %2))
+                                        count <= initialValue;
+                                     else
+                                        count <= initialValue - 1;
+                                     end 
                    endcase
           end
-          else if(raised == 1) begin
+          else if(GAMEOVER == 1) begin
                    case(mode)
 			       COUNT_UP_BY_1:	 count <= 0;        
-	    	               COUNT_UP_BY_2:    count <= 0; 
-		               COUNT_DOWN_BY_1:  count <= MULTICOUNTER_MAX_VALUE;
-	                       COUNT_DOWN_BY_2:  count <= MULTICOUNTER_MAX_VALUE;
+	    	       COUNT_UP_BY_2:    count <= 0; 
+		           COUNT_DOWN_BY_1:  count <= MULTICOUNTER_MAX_VALUE;
+	               COUNT_DOWN_BY_2:  count <= MULTICOUNTER_MAX_VALUE;
                    endcase
-                   raised <= 0;
           end
           else begin        
                    case(mode)
 			       COUNT_UP_BY_1:	 count <= count + 1;   
-                               COUNT_UP_BY_2:    begin if(count % 2 == 0)
-                                                   count <= count + 2; 
-                                                 else
-                                                   count <= count + 1;
-                                                 end 
-		               COUNT_DOWN_BY_1:  count <= count - 1;
-                               COUNT_DOWN_BY_2:  begin if ( (MULTICOUNTER_MAX_VALUE % 2) == (count %2))
-                                                   count <= count - 2;
-                                                 else
-                                                   count <= count - 1;
-                                                 end 
+                   COUNT_UP_BY_2:    begin if(count % 2 == 0)
+                                        count <= count + 2; 
+                                     else
+                                       count <= count + 1;
+                                     end 
+		           COUNT_DOWN_BY_1:  count <= count - 1;
+                   COUNT_DOWN_BY_2:  begin if ( (MULTICOUNTER_MAX_VALUE % 2) == (count %2))
+                                        count <= count - 2;
+                                     else
+                                        count <= count - 1;
+                                     end 
                    endcase
           end
       end
@@ -104,7 +103,6 @@ module multi_mode_counter  #(parameter MULTI_MODE_COUNTER_WIDTH, parameter COUNT
       if(loser_count == COUNTERS_MAX_VALUE || winner_count == COUNTERS_MAX_VALUE)
       begin
           GAMEOVER <= 1;
-          raised <= 1;
           @(posedge clk);
           GAMEOVER <= 0;
           winner_count <= 0;
