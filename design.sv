@@ -100,8 +100,7 @@ module multi_mode_counter  #(parameter MULTI_MODE_COUNTER_WIDTH, parameter COUNT
    end
    // raise GAMEOVRE for one clock
    always @(loser_count or winner_count) begin
-      if(loser_count == COUNTERS_MAX_VALUE || winner_count == COUNTERS_MAX_VALUE)
-      begin
+      if(loser_count == COUNTERS_MAX_VALUE || winner_count == COUNTERS_MAX_VALUE) begin
           GAMEOVER <= 1;
           @(posedge clk);
           GAMEOVER <= 0;
